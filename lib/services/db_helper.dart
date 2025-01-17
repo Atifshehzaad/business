@@ -32,6 +32,7 @@ class DBHelper {
       CREATE TABLE users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL,
+        name TEXT,
         email TEXT NOT NULL UNIQUE,
         password TEXT NOT NULL,
         city TEXT
@@ -176,11 +177,11 @@ class DBHelper {
     await db.insert('categories', {'name': 'Healthcare', 'icon': '🏥'});
     await db.insert('categories', {'name': 'Hotels', 'icon': '🏨'});
     await db.insert('categories', {'name': 'Education', 'icon': '📚'});
-    await db.insert('categories', {'name': 'Entertainment', 'icon': Icons.movie});
-    await db.insert('categories', {'name': 'Shopping', 'icon': Icons.shopping_cart});
-    await db.insert('categories', {'name': 'Fitness', 'icon': Icons.fitness_center});
-    await db.insert('categories', {'name': 'Travel', 'icon': Icons.directions_car});
-    await db.insert('categories', {'name': 'Other', 'icon': Icons.star});
+    await db.insert('categories', {'name': 'Entertainment', 'icon': '🎥'});
+    await db.insert('categories', {'name': 'Shopping', 'icon': '🛒'});
+    await db.insert('categories', {'name': 'Fitness', 'icon': '🏋️'});
+    await db.insert('categories', {'name': 'Travel', 'icon': '🚗'});
+    await db.insert('categories', {'name': 'Other', 'icon': '❓'});
 
     // Insert sub-categories
     await db.insert('sub_categories', {'category_id': 1, 'name': 'Restaurants'});
@@ -300,6 +301,32 @@ class DBHelper {
 
     return await db.query('businesses', where: whereClause, whereArgs: whereArgs);
   }
+  Future<Map<String, dynamic>?> getUserProfile(int userId) async {
+    final db = await database;
+    final results = await db.query(
+      'users',
+      where: 'id = ?',
+      whereArgs: [userId],
+    );
+
+    if (results.isNotEmpty) {
+      return results.first;
+    }
+    return null;
+  }
+  Future<void> updateUserProfile(Map<String, dynamic> user) async {
+    final db = await database;
+    await db.update(
+      'users',
+      {
+        'name': user['name'],
+        'email': user['email'],
+        'city': user['city'],
+      },
+      where: 'id = ?',
+      whereArgs: [user['id']],
+    );
+  }
 
 
   Future<void> printTableData(String tableName) async {
@@ -325,8 +352,6 @@ class DBHelper {
   }
 
   getUserById(int userId) {}
-
-  updateUserProfile(int userId, String trim, String trim2) {}
 
   insertBusiness(Map<String, String?> business) {}
 }

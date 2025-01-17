@@ -1,3 +1,4 @@
+import 'package:business_info_app/screens/profile_screen.dart';
 import 'package:business_info_app/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 import '../services/db_helper.dart';
@@ -55,6 +56,15 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
           ),
+          IconButton(
+              icon: const Icon(Icons.person),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProfileScreen(userId: 1,)),
+                );
+              },
+            ),
         ],
       ),
 
